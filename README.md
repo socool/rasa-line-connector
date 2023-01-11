@@ -26,3 +26,9 @@ curl --request POST \
             "metadata": {}
           }'
 ```
+
+check bot info using this command
+```
+curl --request GET \
+     --url http://localhost:5005/webhooks/line/bot/info
+```

@@ -1,13 +1,18 @@
 from linebot import LineBotApi, WebhookParser
+from linebot.exceptions import LineBotApiError
 from rasa.core.channels.channel import InputChannel, UserMessage, OutputChannel
 from typing import Dict, Text, Any, List, Optional, Callable, Awaitable
 from sanic import Blueprint, response
 from sanic.response import HTTPResponse
 from sanic.request import Request
 import json
+import logging
+
 
 from linebot.models import (
-    MessageEvent, TextMessage, BotInfo)
+    MessageEvent, TextMessage,TextSendMessage, BotInfo)
+
+logger = logging.getLogger(__name__)
 
 class LineConnectorOutput(OutputChannel):
     """Output channel for Line."""
@@ -24,6 +29,39 @@ class LineConnectorOutput(OutputChannel):
         self.reply_token = event.reply_token
         self.sender_id = event.source.user_id
         super().__init__()
+    
+    async def send_to_line(
+            self,
+            payload_object: [TextSendMessage],
+            **kwargs: Any) -> None:
+        try:
+            if self.reply_token:
+                self.line_client.reply_message(
+                    self.reply_token,
+                    messages=payload_object
+                )
+            else:
+                self.line_client.push_message(to=self.sender_id,
+                                              messages=payload_object)
+        except LineBotApiError as e:
+            logger.error(f"Line Error: {e.error.message}")
+            if e.status_code == 400 or e.error.message == 'Invalid reply token, trying to push message.':
+                logger.info('Pushing Message...')
+                self.line_client.push_message(to=self.sender_id,
+                                              messages=payload_object)
+
+    async def send_text_message(
+            self, recipient_id: Text, text: Text, **kwargs: Any
+    ) -> None:
+        try:
+            json_converted = json.loads(text)
+            if json_converted.get('flex'):
+                await self.send_to_line(self.process_flex_message(json_converted))
+            else:
+                await self.send_to_line(TextSendMessage(text='Wrong Flex'))
+        except ValueError:
+            message_object = TextSendMessage(text=text)
+            await self.send_to_line(message_object)
 
 class LineConnectorInput(InputChannel):
     """Line input channel"""
