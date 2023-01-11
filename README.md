@@ -3,6 +3,15 @@
 folk from
 https://github.com/jakkritz/line_rasa_connector
 
+### Create your credential file contain
+```
+rasa:
+  url: "http://localhost:5002/api"
+
+addons.line_connector.LineConnectorInput:
+  app_secret: "[APP_SECRET]"
+  access_token: "ACCESS_TOKEN"
+```
 
 ### Train your models
 ```
