@@ -54,11 +54,7 @@ class LineConnectorOutput(OutputChannel):
             self, recipient_id: Text, text: Text, **kwargs: Any
     ) -> None:
         try:
-            json_converted = json.loads(text)
-            if json_converted.get('flex'):
-                await self.send_to_line(self.process_flex_message(json_converted))
-            else:
-                await self.send_to_line(TextSendMessage(text='Wrong Flex'))
+            await self.send_to_line(TextSendMessage(text=text))
         except ValueError:
             message_object = TextSendMessage(text=text)
             await self.send_to_line(message_object)
@@ -113,12 +109,12 @@ class LineConnectorInput(InputChannel):
                 if signature:
                     body = request.body.decode('utf-8')
                     events = parser.parse(body, signature)
+                    print(events)
                     for event in events:
                         line_output = LineConnectorOutput(self.access_token, event)
                         if isinstance(event, MessageEvent):
                             metadata = self.get_metadata(request)
                             msg = event.message
-                            reply_token = event.reply_token
                             user_id = event.source.user_id
                             if isinstance(msg, TextMessage):
                                     # Send to RASA

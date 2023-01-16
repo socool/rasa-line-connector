@@ -3,6 +3,15 @@
 folk from
 https://github.com/jakkritz/line_rasa_connector
 
+<a name="line-app-setup"></a>
+### Line app setup
+
+- [Create an app](https://developers.line.biz/en/services/messaging-api/)
+- Add the Messaging API app
+- Install ngrok
+- Enable line webhook
+- Setting webhook url in (https://developers.line.biz/en/docs/messaging-api/building-bot/#set-up-bot-on-line-developers-console)
+
 ### Create your credential file contain
 ```
 rasa:
@@ -10,7 +19,7 @@ rasa:
 
 addons.line_connector.LineConnectorInput:
   app_secret: "[APP_SECRET]"
-  access_token: "ACCESS_TOKEN"
+  access_token: "[ACCESS_TOKEN]"
 ```
 
 ### Train your models
