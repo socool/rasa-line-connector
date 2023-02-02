@@ -89,3 +89,15 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- intent: line
+  examples: |
+    - line [text]{"entity":"message_type","role":"type"}
+    - line [sticker]{"entity":"message_type","role":"type"}
+    - line [image]{"entity":"message_type","role":"type"}
+    - line [video]{"entity":"message_type","role":"type"}
+    - line [audio]{"entity":"message_type","role":"type"}
+    - line [location]{"entity":"message_type","role":"type"}
+    - line [image map]{"entity":"message_type","role":"type"}
+    - line [template]{"entity":"message_type","role":"type"}
+    - line [flex]{"entity":"message_type","role":"type"}

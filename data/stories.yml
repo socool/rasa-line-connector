@@ -28,3 +28,10 @@ stories:
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
+
+- story: line flex
+  steps:
+  - intent: line
+  - slot_was_set:
+    - message_type: flex
+  - action: action_line_process

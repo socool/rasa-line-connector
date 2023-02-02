@@ -8,6 +8,10 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
+  - line
+
+entities:
+  - message_type
 
 responses:
   utter_greet:
@@ -29,6 +33,24 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
+  utter_slots_line_values:
+  - text: Reponse {message_type}
+
+  utter_handover_to_human:
+  - text: this is agent
+
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
+
+actions:
+  - action_line_process
+
+slots:
+  message_type:
+    type: list
+    mappings:
+    - type: from_entity
+      entity: message_type
+      role: type
+      intent: line

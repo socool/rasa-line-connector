@@ -33,6 +33,17 @@ commands for run server to test callback
 rasa run -m models --credentials credentials.yml --enable-api
 ```
 
+### Run Action server
+for test line component
+```
+rasa run actions
+```
+
+run with debug mode
+```
+rasa run -m models --credentials credentials.yml --enable-api --cors "*" --debug`
+```
+
 using this curl for test line webhook payload
 ```
 curl --request POST \

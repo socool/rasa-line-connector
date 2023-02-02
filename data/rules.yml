@@ -11,3 +11,21 @@ rules:
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
+
+# - rule: line without message_type
+#   steps:
+#   - intent: line
+#   - slot_was_set:
+#     - message_type: text
+#   - action: action_line_process
+
+
+- rule: line with flex
+  steps:
+  - intent: line
+  - slot_was_set:
+    - message_type: flex
+  - action: action_line_process
+
+actions:
+  - action_line_process
