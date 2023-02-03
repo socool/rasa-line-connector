@@ -11,14 +11,14 @@ from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
+import logging
 
 from rasa_sdk.events import (
     ActionExecuted,
     SlotSet,
 )
 
-
-
+logger = logging.getLogger(__name__)
 
 class ActionLineProcess(Action):
 
@@ -106,10 +106,9 @@ class ActionLineProcess(Action):
         for e in entities:
             if e["entity"] == "message_type":
                 slot_value = e["value"]
-                print(slot_value)
+                logger.debug(f"slot_value:{slot_value}")
                 dispatcher.utter_message(response = "utter_slots_line_values")
-                return [
-                    SlotSet("message_type", slot_value)]
+                return [SlotSet("message_type", slot_value)]
         
         # print("tracker:",tracker)
         # print("MESSAGE_TYPE:",message_type)

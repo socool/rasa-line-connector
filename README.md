@@ -41,7 +41,7 @@ rasa run actions
 
 run with debug mode
 ```
-rasa run -m models --credentials credentials.yml --enable-api --cors "*" --debug`
+rasa run -m models --credentials credentials.yml --enable-api --cors "*" --debug
 ```
 
 using this curl for test line webhook payload
