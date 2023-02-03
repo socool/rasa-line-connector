@@ -1,5 +1,16 @@
 ### RASA Line Connector
 
+Commmit pattern
+- feat (✨): new feature
+- fix (🐛): fix some bug
+- refactor (📦): code refactor
+- style (💎): code style
+- test (🚨): add/edit test case
+- perf (🚀): performance tuning
+- build (🔨): build script
+- ci (⚙️): cd/ci
+- docs (📚): add/edit document
+
 folk from
 https://github.com/jakkritz/line_rasa_connector
 
