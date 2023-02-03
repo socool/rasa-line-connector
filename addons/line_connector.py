@@ -74,7 +74,14 @@ class Line:
             text, out_channel, sender_id, input_channel=self.name(), metadata=metadata
         )
         # test send text to line
-        await out_channel.send_text_message(sender_id, text)
+        # await out_channel.send_text_message(sender_id, text)
+        try:
+            await self.on_new_message(user_msg)
+        except Exception:
+            logger.exception(
+                "Exception when trying to handle webhook for facebook message."
+            )
+            pass
        
 
 class LineConnectorOutput(OutputChannel):
