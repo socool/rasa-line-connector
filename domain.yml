@@ -36,6 +36,12 @@ responses:
   utter_slots_line_values:
   - text: Reponse {message_type}
 
+  utter_slots_line_flex:
+  - text: this is flex
+
+  utter_slots_line_text:
+  - text: this is text
+
   utter_handover_to_human:
   - text: this is agent
 

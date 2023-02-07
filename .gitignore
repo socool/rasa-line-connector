@@ -144,5 +144,7 @@ cython_debug/
 .rasa/
 .rasa/cache/cache.db
 models/
+graph.html
+story_graph.dot
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Python
