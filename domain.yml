@@ -39,7 +39,7 @@ responses:
   utter_slots_line_flex:
   - custom: 
       type: flex
-      altText: "This is Flex Message"
+      alt_text: "This is Flex Message"
       contens:
         type: bubble
         body:

@@ -138,7 +138,7 @@ class LineConnectorOutput(OutputChannel):
             if json_converted.get('type') == 'flex':
                 await self.send_to_line(
                     FlexSendMessage(
-                        alt_text=json_converted.get('altText'),
+                        alt_text=json_converted.get('alt_text'),
                         contents=json_converted.get('contens')
                     ))
             else:
