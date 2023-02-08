@@ -142,7 +142,7 @@ cython_debug/
 
 # RASA
 .rasa/
-.rasa/cache/cache.db
+.rasa/cache/
 models/
 graph.html
 story_graph.dot

@@ -14,7 +14,8 @@ from linebot.models import (
     TextSendMessage, 
     FlexSendMessage,
     StickerSendMessage,
-    ImageSendMessage,    
+    ImageSendMessage,
+    VideoSendMessage,
     BotInfo)
 
 logger = logging.getLogger(__name__)
@@ -110,7 +111,8 @@ class LineConnectorOutput(OutputChannel):
             payload_object: [TextSendMessage,
                              FlexSendMessage,
                              StickerSendMessage,
-                             ImageSendMessage],
+                             ImageSendMessage,
+                             VideoSendMessage],
             **kwargs: Any) -> None:
         try:
             if self.reply_token:
@@ -153,6 +155,13 @@ class LineConnectorOutput(OutputChannel):
                     ImageSendMessage(
                         original_content_url=json_converted.get('original_content_url'),
                         preview_image_url=json_converted.get('preview_image_url')
+                    ))
+            elif json_converted.get('type') == 'video':
+                await self.send_to_line(
+                    VideoSendMessage(
+                        original_content_url=json_converted.get('original_content_url'),
+                        preview_image_url=json_converted.get('preview_image_url'),
+                        tracking_id=json_converted.get('tracking_id')
                     ))
             else:
                 await self.send_to_line(TextSendMessage(text=text))
