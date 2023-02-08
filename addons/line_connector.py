@@ -1,7 +1,7 @@
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import LineBotApiError
 from rasa.core.channels.channel import InputChannel, UserMessage, OutputChannel
-from typing import Dict, Text, Any, List, Optional, Callable, Awaitable
+from typing import Dict, Text, Any, List, Optional, Callable, Awaitable,Union
 from sanic import Blueprint, response
 from sanic.response import HTTPResponse
 from sanic.request import Request
@@ -133,26 +133,20 @@ class LineConnectorOutput(OutputChannel):
     ) -> None:
         try:
             json_converted = json.loads(text)
-            if json_converted.get('flex'):
-                flex_message = FlexSendMessage(
-                    alt_text='hello',
-                    contents=BubbleContainer(
-                        direction='ltr',
-                        hero=ImageComponent(
-                            url='https://example.com/cafe.jpg',
-                            size='full',
-                            aspect_ratio='20:13',
-                            aspect_mode='cover',
-                            action=URIAction(uri='http://example.com', label='label')
-                        )
-                    )
-                )
-                await self.send_to_line(flex_message)
+            print("json_converted:",json_converted)
+            
+            if json_converted.get('type') == 'flex':
+                await self.send_to_line(
+                    FlexSendMessage(
+                        alt_text=json_converted.get('altText'),
+                        contents=json_converted.get('contens')
+                    ))
             else:
                 await self.send_to_line(TextSendMessage(text=text))
         except ValueError:
             message_object = TextSendMessage(text=text)
             await self.send_to_line(message_object)
+
 
 class LineConnectorInput(InputChannel):
     """Line input channel"""

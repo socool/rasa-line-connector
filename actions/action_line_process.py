@@ -36,5 +36,6 @@ class ActionLineProcess(Action):
         print("message_type:",message_type, " entities:",entities)
         if message_type == "flex":
             # dispatcher.utter_message(response = f"utter_slots_line_{message_type}")
-            dispatcher.utter_message(json_message={"flex":True, "response":"utter_slots_line_flex"})
-        dispatcher.utter_message(response = f"utter_slots_line")
+            dispatcher.utter_message(response="utter_slots_line_flex")
+        else:
+            dispatcher.utter_message(response = f"utter_slots_line")
