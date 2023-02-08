@@ -45,5 +45,7 @@ class ActionLineProcess(Action):
             dispatcher.utter_message(response="utter_slots_line_video")
         elif message_type == "audio":
             dispatcher.utter_message(response="utter_slots_line_audio")
+        elif message_type == "location":
+            dispatcher.utter_message(response="utter_slots_line_location")
         else:
             dispatcher.utter_message(response = f"utter_slots_line")

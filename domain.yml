@@ -74,6 +74,14 @@ responses:
       original_content_url: "https://example.com/original.m4a"
       duration: 60000
 
+  utter_slots_line_location:
+  - custom: 
+      type: location
+      title: "my location"
+      address: "1-6-1 Yotsuya, Shinjuku-ku, Tokyo, 160-0004, Japan"
+      latitude: 35.687574
+      longitude: 139.72922
+
   utter_slots_line_text:
   - text: this is text
 

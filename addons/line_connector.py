@@ -17,6 +17,7 @@ from linebot.models import (
     ImageSendMessage,
     VideoSendMessage,
     AudioSendMessage,
+    LocationSendMessage,
     BotInfo)
 
 logger = logging.getLogger(__name__)
@@ -114,7 +115,8 @@ class LineConnectorOutput(OutputChannel):
                              StickerSendMessage,
                              ImageSendMessage,
                              VideoSendMessage,
-                             AudioSendMessage],
+                             AudioSendMessage,
+                             LocationSendMessage],
             **kwargs: Any) -> None:
         try:
             if self.reply_token:
@@ -170,6 +172,14 @@ class LineConnectorOutput(OutputChannel):
                     AudioSendMessage(
                         original_content_url=json_converted.get('original_content_url'),
                         duration=json_converted.get('duration')
+                    ))
+            elif json_converted.get('type') == 'location':
+                await self.send_to_line(
+                    LocationSendMessage(
+                        title=json_converted.get('title'),
+                        address=json_converted.get('address'),
+                        latitude=json_converted.get('latitude'),
+                        longitude=json_converted.get('longitude')
                     ))
             else:
                 await self.send_to_line(TextSendMessage(text=text))
