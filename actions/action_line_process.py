@@ -25,10 +25,16 @@ class ActionLineProcess(Action):
     def name(self) -> Text:
         return "action_line_process"
 
-    def run(self, dispatcher: CollectingDispatcher,
+    def run(
+            self, 
+            dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         
-        message_type = tracker.get_slot("message_type")
-        print("message_type:",message_type[0])
-        dispatcher.utter_message(response = f"utter_slots_line_{message_type[0]}")
+        message_type = tracker.get_slot("message_type")[0]
+        entities = tracker.latest_message['entities']
+        print("message_type:",message_type, " entities:",entities)
+        if message_type == "flex":
+            # dispatcher.utter_message(response = f"utter_slots_line_{message_type}")
+            dispatcher.utter_message(json_message={"flex":True, "response":"utter_slots_line_flex"})
+        dispatcher.utter_message(response = f"utter_slots_line")

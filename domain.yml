@@ -33,11 +33,22 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
-  utter_slots_line_values:
+  utter_slots_line:
   - text: Reponse {message_type}
 
   utter_slots_line_flex:
-  - text: this is flex
+  - custom: 
+      type: flex
+      altText: "This is Flex Message"
+      contens:
+        type: bubble
+        body:
+          type: box
+          layout: vertical
+          contens:
+            - {type: "text", text: "hello"}
+            - {type: "text", text: "world"}
+
 
   utter_slots_line_text:
   - text: this is text

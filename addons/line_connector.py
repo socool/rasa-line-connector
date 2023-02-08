@@ -10,7 +10,13 @@ import logging
 
 
 from linebot.models import (
-    MessageEvent, TextMessage,TextSendMessage, BotInfo)
+    MessageEvent, 
+    TextSendMessage, 
+    FlexSendMessage, 
+    BubbleContainer,
+    ImageComponent,
+    URIAction,
+    BotInfo)
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +108,8 @@ class LineConnectorOutput(OutputChannel):
     
     async def send_to_line(
             self,
-            payload_object: [TextSendMessage],
+            payload_object: [TextSendMessage,
+                             FlexSendMessage],
             **kwargs: Any) -> None:
         try:
             if self.reply_token:
@@ -115,6 +122,7 @@ class LineConnectorOutput(OutputChannel):
                                               messages=payload_object)
         except LineBotApiError as e:
             logger.error(f"Line Error: {e.error.message}")
+            logger.error(f"Payload: {payload_object}")
             if e.status_code == 400 or e.error.message == 'Invalid reply token, trying to push message.':
                 logger.info('Pushing Message...')
                 self.line_client.push_message(to=self.sender_id,
@@ -124,7 +132,24 @@ class LineConnectorOutput(OutputChannel):
             self, recipient_id: Text, text: Text, **kwargs: Any
     ) -> None:
         try:
-            await self.send_to_line(TextSendMessage(text=text))
+            json_converted = json.loads(text)
+            if json_converted.get('flex'):
+                flex_message = FlexSendMessage(
+                    alt_text='hello',
+                    contents=BubbleContainer(
+                        direction='ltr',
+                        hero=ImageComponent(
+                            url='https://example.com/cafe.jpg',
+                            size='full',
+                            aspect_ratio='20:13',
+                            aspect_mode='cover',
+                            action=URIAction(uri='http://example.com', label='label')
+                        )
+                    )
+                )
+                await self.send_to_line(flex_message)
+            else:
+                await self.send_to_line(TextSendMessage(text=text))
         except ValueError:
             message_object = TextSendMessage(text=text)
             await self.send_to_line(message_object)
