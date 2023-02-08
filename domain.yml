@@ -54,6 +54,12 @@ responses:
       type: sticker
       package_id: 446
       sticker_id: 1988
+  
+  utter_slots_line_image:
+  - custom: 
+      type: image
+      original_content_url: "https://example.com/original.jpg"
+      preview_image_url: "https://example.com/preview.jpg"
 
   utter_slots_line_text:
   - text: this is text
