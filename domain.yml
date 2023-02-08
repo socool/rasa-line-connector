@@ -67,6 +67,12 @@ responses:
       original_content_url: "https://example.com/original.mp4"
       preview_image_url: "https://example.com/preview.jpg"
       tracking_id: "track-id"
+  
+  utter_slots_line_audio:
+  - custom: 
+      type: audio
+      original_content_url: "https://example.com/original.m4a"
+      duration: 60000
 
   utter_slots_line_text:
   - text: this is text

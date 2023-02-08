@@ -16,6 +16,7 @@ from linebot.models import (
     StickerSendMessage,
     ImageSendMessage,
     VideoSendMessage,
+    AudioSendMessage,
     BotInfo)
 
 logger = logging.getLogger(__name__)
@@ -108,11 +109,12 @@ class LineConnectorOutput(OutputChannel):
     
     async def send_to_line(
             self,
-            payload_object: [TextSendMessage,
+            payload_object: Union[TextSendMessage,
                              FlexSendMessage,
                              StickerSendMessage,
                              ImageSendMessage,
-                             VideoSendMessage],
+                             VideoSendMessage,
+                             AudioSendMessage],
             **kwargs: Any) -> None:
         try:
             if self.reply_token:
@@ -162,6 +164,12 @@ class LineConnectorOutput(OutputChannel):
                         original_content_url=json_converted.get('original_content_url'),
                         preview_image_url=json_converted.get('preview_image_url'),
                         tracking_id=json_converted.get('tracking_id')
+                    ))
+            elif json_converted.get('type') == 'audio':
+                await self.send_to_line(
+                    AudioSendMessage(
+                        original_content_url=json_converted.get('original_content_url'),
+                        duration=json_converted.get('duration')
                     ))
             else:
                 await self.send_to_line(TextSendMessage(text=text))
