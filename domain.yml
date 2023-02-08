@@ -49,6 +49,11 @@ responses:
             - {type: "text", text: "hello"}
             - {type: "text", text: "world"}
 
+  utter_slots_line_sticker:
+  - custom: 
+      type: sticker
+      package_id: 446
+      sticker_id: 1988
 
   utter_slots_line_text:
   - text: this is text

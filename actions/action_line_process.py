@@ -37,5 +37,7 @@ class ActionLineProcess(Action):
         if message_type == "flex":
             # dispatcher.utter_message(response = f"utter_slots_line_{message_type}")
             dispatcher.utter_message(response="utter_slots_line_flex")
+        elif message_type == "sticker":
+            dispatcher.utter_message(response="utter_slots_line_sticker")
         else:
             dispatcher.utter_message(response = f"utter_slots_line")

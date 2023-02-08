@@ -12,7 +12,8 @@ import logging
 from linebot.models import (
     MessageEvent, 
     TextSendMessage, 
-    FlexSendMessage, 
+    FlexSendMessage,
+    StickerSendMessage,
     BubbleContainer,
     ImageComponent,
     URIAction,
@@ -109,7 +110,8 @@ class LineConnectorOutput(OutputChannel):
     async def send_to_line(
             self,
             payload_object: [TextSendMessage,
-                             FlexSendMessage],
+                             FlexSendMessage,
+                             StickerSendMessage],
             **kwargs: Any) -> None:
         try:
             if self.reply_token:
@@ -140,6 +142,12 @@ class LineConnectorOutput(OutputChannel):
                     FlexSendMessage(
                         alt_text=json_converted.get('alt_text'),
                         contents=json_converted.get('contens')
+                    ))
+            elif json_converted.get('type') == 'sticker':
+                await self.send_to_line(
+                    StickerSendMessage(
+                        package_id=json_converted.get('package_id'),
+                        sticker_id=json_converted.get('sticker_id')
                     ))
             else:
                 await self.send_to_line(TextSendMessage(text=text))
