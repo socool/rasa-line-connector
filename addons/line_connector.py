@@ -22,6 +22,18 @@ from linebot.models import (
 
 logger = logging.getLogger(__name__)
 
+def has_empty_values(data):
+    if isinstance(data, dict):
+        for value in data.values():
+            if not value or has_empty_values(value):
+                return True
+    elif isinstance(data, list):
+        for item in data:
+            if has_empty_values(item):
+                return True
+    elif not data:
+        return True
+    return False
 class Line:
     """Implement a line to parse incoming webhooks and send msgs."""
 
@@ -182,11 +194,16 @@ class LineConnectorOutput(OutputChannel):
                         longitude=json_converted.get('longitude')
                     ))
             else:
-                await self.send_to_line(TextSendMessage(text=text))
+                print("quick_reply:",json_converted.get("quick_reply"))
+                if(not has_empty_values(json_converted.get("text"))):
+                    text = json_converted.get("text")
+                await self.send_to_line(
+                    TextSendMessage(
+                        text=text,
+                        quick_reply=json_converted.get("quick_reply")))
         except ValueError:
             message_object = TextSendMessage(text=text)
             await self.send_to_line(message_object)
-
 
 class LineConnectorInput(InputChannel):
     """Line input channel"""

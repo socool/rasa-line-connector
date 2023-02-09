@@ -81,6 +81,29 @@ responses:
       address: "1-6-1 Yotsuya, Shinjuku-ku, Tokyo, 160-0004, Japan"
       latitude: 35.687574
       longitude: 139.72922
+  
+  utter_slots_line_text_with_quickreply:
+  - custom: 
+      type: text
+      text: Select your favorite food category or send me your location!
+      quick_reply:
+        items:
+        - type: action
+          image_url: https://example.com/sushi.png
+          action:
+            type: message
+            label: Sushi
+            text: Sushi
+        - type: action
+          image_url: https://example.com/tempura.png
+          action:
+            type: message
+            label: Tempura
+            text: Tempura
+        - type: action
+          action:
+            type: location
+            label: Send location
 
   utter_slots_line_text:
   - text: this is text
