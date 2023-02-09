@@ -55,5 +55,7 @@ class ActionLineProcess(Action):
             dispatcher.utter_message(response="utter_slots_line_template")
         elif message_type == "template_with_button":
             dispatcher.utter_message(response="utter_slots_line_template_with_button")
+        elif message_type == "template_with_confirm":
+            dispatcher.utter_message(response="utter_slots_line_template_with_confirm")
         else:
             dispatcher.utter_message(response = f"utter_slots_line")

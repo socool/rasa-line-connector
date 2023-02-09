@@ -161,7 +161,20 @@ responses:
         - type: uri
           label: uri
           uri: http://example.com/
-  
+  utter_slots_line_template_with_confirm:
+  - custom:
+      type: template
+      alt_text: Confirm template
+      template:        
+        text: Are you sure?
+        actions:
+        - type: postback
+          label: postback
+          display_text: post back text
+          data: action=buy&itemid=1
+        - type: message
+          label: message
+          text: message text  
 
   utter_slots_line_text:
   - text: this is text

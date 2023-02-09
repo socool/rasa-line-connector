@@ -19,6 +19,7 @@ from linebot.models import (
     AudioSendMessage,
     LocationSendMessage,
     TemplateSendMessage,
+    ConfirmTemplate,
     BotInfo)
 
 logger = logging.getLogger(__name__)
@@ -196,12 +197,26 @@ class LineConnectorOutput(OutputChannel):
                         longitude=json_converted.get('longitude')
                     ))
             elif json_converted.get('type') == 'template':
-                await self.send_to_line(
-                    TemplateSendMessage(
-                        alt_text=json_converted.get('alt_text'),
-                        template=json_converted.get('template')
+                template = json_converted.get('template')                
+                # case: does't have type is confirm template
+                if(has_empty_values(template.get('type'))):
+                    print("template:",template)
+                    await self.send_to_line(
+                        TemplateSendMessage(
+                            alt_text=json_converted.get('alt_text'),
+                            template=ConfirmTemplate(
+                                text=template.get('text'),
+                                actions=template.get('actions'))
+                        )
+                    )
+                else: #other is normal template
+                    await self.send_to_line(
+                        TemplateSendMessage(
+                            alt_text=json_converted.get('alt_text'),
+                            template=json_converted.get('template')
 
-                    ))
+                        )
+                    )
             else:
                 print("quick_reply:",json_converted.get("quick_reply"))
                 print("emojis:",json_converted.get("emojis"))
