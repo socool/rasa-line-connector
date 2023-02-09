@@ -98,6 +98,5 @@ nlu:
     - line [video]{"entity":"message_type","role":"type"}
     - line [audio]{"entity":"message_type","role":"type"}
     - line [location]{"entity":"message_type","role":"type"}
-    - line [image map]{"entity":"message_type","role":"type"}
     - line [template]{"entity":"message_type","role":"type"}
     - line [flex]{"entity":"message_type","role":"type"}

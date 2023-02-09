@@ -51,5 +51,7 @@ class ActionLineProcess(Action):
             dispatcher.utter_message(response="utter_slots_line_text_with_quickreply")
         elif message_type == "text_with_emoji":
             dispatcher.utter_message(response="utter_slots_line_text_with_emoji")
+        elif message_type == "template":
+            dispatcher.utter_message(response="utter_slots_line_template")
         else:
             dispatcher.utter_message(response = f"utter_slots_line")

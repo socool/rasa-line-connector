@@ -115,6 +115,32 @@ responses:
         - index: 13
           productId: "5ac1bfd5040ab15980c9b435"
           emojiId: "002"
+  utter_slots_line_template:
+  - custom:
+      type: template
+      alt_text: This is a buttons template
+      template:
+        type: buttons
+        thumbnail_image_url: https://example.com/bot/images/image.jpg
+        image_aspect_ratio: rectangle
+        image_size: cover
+        image_background_color: "#FFFFFF"
+        title: Menu
+        text: Please select
+        default_action:
+          type: uri
+          label: View detail
+          uri: http://example.com/page/123
+        actions:
+        - type: postback
+          label: Buy
+          data: action=buy&itemid=123
+        - type: postback
+          label: Add to cart
+          data: action=add&itemid=123
+        - type: uri
+          label: View detail
+          uri: http://example.com/page/123
 
   utter_slots_line_text:
   - text: this is text

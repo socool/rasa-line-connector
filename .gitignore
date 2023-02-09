@@ -143,8 +143,23 @@ cython_debug/
 # RASA
 .rasa/
 .rasa/cache/
+.rasa
 models/
 graph.html
 story_graph.dot
+
+# Rasa cache and logs
+.rasa/cache
+.rasa/logs
+
+# Rasa models
+models/
+
+# Rasa SQL data
+*.sqlite3
+
+# Rasa core and nlu model output files
+data/models/core
+data/models/nlu
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Python

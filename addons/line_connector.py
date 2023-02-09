@@ -18,6 +18,7 @@ from linebot.models import (
     VideoSendMessage,
     AudioSendMessage,
     LocationSendMessage,
+    TemplateSendMessage,
     BotInfo)
 
 logger = logging.getLogger(__name__)
@@ -76,7 +77,7 @@ class Line:
             text = event.message.text     
         else:
             logger.warning(
-                "Received a message from facebook that we can not "
+                "Received a message from line that we can not "
                 f"handle. Event: {event}"
             )
             return  
@@ -99,7 +100,7 @@ class Line:
             await self.on_new_message(user_msg)
         except Exception:
             logger.exception(
-                "Exception when trying to handle webhook for facebook message."
+                "Exception when trying to handle webhook for line message."
             )
             pass
        
@@ -128,7 +129,8 @@ class LineConnectorOutput(OutputChannel):
                              ImageSendMessage,
                              VideoSendMessage,
                              AudioSendMessage,
-                             LocationSendMessage],
+                             LocationSendMessage,
+                             TemplateSendMessage],
             **kwargs: Any) -> None:
         try:
             if self.reply_token:
@@ -192,6 +194,13 @@ class LineConnectorOutput(OutputChannel):
                         address=json_converted.get('address'),
                         latitude=json_converted.get('latitude'),
                         longitude=json_converted.get('longitude')
+                    ))
+            elif json_converted.get('type') == 'template':
+                await self.send_to_line(
+                    TemplateSendMessage(
+                        alt_text=json_converted.get('alt_text'),
+                        template=json_converted.get('template')
+
                     ))
             else:
                 print("quick_reply:",json_converted.get("quick_reply"))
