@@ -195,12 +195,16 @@ class LineConnectorOutput(OutputChannel):
                     ))
             else:
                 print("quick_reply:",json_converted.get("quick_reply"))
+                print("emojis:",json_converted.get("emojis"))
                 if(not has_empty_values(json_converted.get("text"))):
                     text = json_converted.get("text")
                 await self.send_to_line(
                     TextSendMessage(
                         text=text,
-                        quick_reply=json_converted.get("quick_reply")))
+                        quick_reply=json_converted.get("quick_reply"),
+                        emojis=json_converted.get("emojis")
+                        )
+                    )
         except ValueError:
             message_object = TextSendMessage(text=text)
             await self.send_to_line(message_object)

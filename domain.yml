@@ -104,6 +104,17 @@ responses:
           action:
             type: location
             label: Send location
+  utter_slots_line_text_with_emoji:
+  - custom:
+      type: text
+      text: "$ LINE emoji $"
+      emojis:
+        - index: 0
+          productId: "5ac1bfd5040ab15980c9b435"
+          emojiId: "001"
+        - index: 13
+          productId: "5ac1bfd5040ab15980c9b435"
+          emojiId: "002"
 
   utter_slots_line_text:
   - text: this is text
