@@ -20,6 +20,7 @@ from linebot.models import (
     LocationSendMessage,
     TemplateSendMessage,
     ConfirmTemplate,
+    CarouselTemplate,
     BotInfo)
 
 logger = logging.getLogger(__name__)
@@ -197,9 +198,10 @@ class LineConnectorOutput(OutputChannel):
                         longitude=json_converted.get('longitude')
                     ))
             elif json_converted.get('type') == 'template':
-                template = json_converted.get('template')                
+                template = json_converted.get('template')
+                template_type = template.get('type')
                 # case: does't have type is confirm template
-                if(has_empty_values(template.get('type'))):
+                if(has_empty_values(template_type)):
                     print("template:",template)
                     await self.send_to_line(
                         TemplateSendMessage(
@@ -210,13 +212,26 @@ class LineConnectorOutput(OutputChannel):
                         )
                     )
                 else: #other is normal template
-                    await self.send_to_line(
-                        TemplateSendMessage(
-                            alt_text=json_converted.get('alt_text'),
-                            template=json_converted.get('template')
+                    if(template_type == 'carousel'):# handle carousel template
+                        await self.send_to_line(
+                            TemplateSendMessage(
+                                alt_text=json_converted.get('alt_text'),
+                                template=CarouselTemplate(
+                                    columns=template.get('columns'),
+                                    image_aspect_ratio=template.get('image_aspect_ratio'),
+                                    image_size=template.get('image_size')
+                                )
 
+                            )
                         )
-                    )
+                    else:
+                        await self.send_to_line(
+                            TemplateSendMessage(
+                                alt_text=json_converted.get('alt_text'),
+                                template=json_converted.get('template')
+
+                            )
+                        )
             else:
                 print("quick_reply:",json_converted.get("quick_reply"))
                 print("emojis:",json_converted.get("emojis"))
