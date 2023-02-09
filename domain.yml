@@ -141,6 +141,27 @@ responses:
         - type: uri
           label: View detail
           uri: http://example.com/page/123
+  utter_slots_line_template_with_button:
+  - custom:
+      type: template
+      alt_text: Buttons template
+      template:
+        type: buttons
+        thumbnail_image_url: https://example.com/bot/images/image.jpg
+        title: Menu
+        text: Please select
+        actions:
+        - type: postback
+          label: postback
+          display_text: post back text
+          data: action=buy&itemid=1
+        - type: message
+          label: message
+          text: message text
+        - type: uri
+          label: uri
+          uri: http://example.com/
+  
 
   utter_slots_line_text:
   - text: this is text
