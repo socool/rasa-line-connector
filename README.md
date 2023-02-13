@@ -24,6 +24,7 @@ https://github.com/jakkritz/line_rasa_connector
 - Setting webhook url in (https://developers.line.biz/en/docs/messaging-api/building-bot/#set-up-bot-on-line-developers-console)
 
 ### Create your credential file contain
+credentials.yml
 ```
 rasa:
   url: "http://localhost:5002/api"
