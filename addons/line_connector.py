@@ -76,7 +76,12 @@ class Line:
         # quick reply and user message both share 'text' attribute
         # so quick reply should be checked first
         if self._is_user_message(event):
-            text = event.message.text     
+            if hasattr(event, 'message'): 
+                #extract text from user message
+                text = event.message.text
+            else:
+                #extract data from user postback
+                text = event.postback.data
         else:
             logger.warning(
                 "Received a message from line that we can not "
@@ -200,9 +205,9 @@ class LineConnectorOutput(OutputChannel):
             elif json_converted.get('type') == 'template':
                 template = json_converted.get('template')
                 template_type = template.get('type')
-                # case: does't have type is confirm template
-                if(has_empty_values(template_type)):
-                    print("template:",template)
+                print(f"template:{template} type:{type}")
+                # case: does't have type is confirm template                
+                if(has_empty_values(template_type)):                    
                     await self.send_to_line(
                         TemplateSendMessage(
                             alt_text=json_converted.get('alt_text'),
@@ -221,7 +226,6 @@ class LineConnectorOutput(OutputChannel):
                                     image_aspect_ratio=template.get('image_aspect_ratio'),
                                     image_size=template.get('image_size')
                                 )
-
                             )
                         )
                     else:
