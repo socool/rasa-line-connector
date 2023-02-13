@@ -71,10 +71,8 @@ class Line:
     async def message(
         self, event: MessageEvent, metadata: Optional[Dict[Text, Any]]
     ) -> None:
-        """Handle an incoming event from the fb webhook."""
+        """Handle an incoming event from the line webhook."""
 
-        # quick reply and user message both share 'text' attribute
-        # so quick reply should be checked first
         if self._is_user_message(event):
             if hasattr(event, 'message'): 
                 #extract text from user message
@@ -101,8 +99,6 @@ class Line:
         user_msg = UserMessage(
             text, out_channel, sender_id, input_channel=self.name(), metadata=metadata
         )
-        # test send text to line
-        # await out_channel.send_text_message(sender_id, text)
         try:
             await self.on_new_message(user_msg)
         except Exception:
@@ -160,41 +156,48 @@ class LineConnectorOutput(OutputChannel):
             self, recipient_id: Text, text: Text, **kwargs: Any
     ) -> None:
         try:
-            json_converted = json.loads(text)
-            print("json_converted:",json_converted)
+            json_converted = json.loads(text)            
+            logger.debug(f"json_converted:{json_converted}")
+            message_type = json_converted.get('type')
             
-            if json_converted.get('type') == 'flex':
+            if message_type == 'flex':
+                # send flex
                 await self.send_to_line(
                     FlexSendMessage(
                         alt_text=json_converted.get('alt_text'),
                         contents=json_converted.get('contens')
                     ))
-            elif json_converted.get('type') == 'sticker':
+            elif message_type == 'sticker':
+                # send sticker
                 await self.send_to_line(
                     StickerSendMessage(
                         package_id=json_converted.get('package_id'),
                         sticker_id=json_converted.get('sticker_id')
                     ))
-            elif json_converted.get('type') == 'image':
+            elif message_type == 'image':
+                # send image
                 await self.send_to_line(
                     ImageSendMessage(
                         original_content_url=json_converted.get('original_content_url'),
                         preview_image_url=json_converted.get('preview_image_url')
                     ))
-            elif json_converted.get('type') == 'video':
+            elif message_type == 'video':
+                # send video
                 await self.send_to_line(
                     VideoSendMessage(
                         original_content_url=json_converted.get('original_content_url'),
                         preview_image_url=json_converted.get('preview_image_url'),
                         tracking_id=json_converted.get('tracking_id')
                     ))
-            elif json_converted.get('type') == 'audio':
+            elif message_type == 'audio':
+                # send audio
                 await self.send_to_line(
                     AudioSendMessage(
                         original_content_url=json_converted.get('original_content_url'),
                         duration=json_converted.get('duration')
                     ))
-            elif json_converted.get('type') == 'location':
+            elif message_type == 'location':
+                # send location
                 await self.send_to_line(
                     LocationSendMessage(
                         title=json_converted.get('title'),
@@ -202,10 +205,10 @@ class LineConnectorOutput(OutputChannel):
                         latitude=json_converted.get('latitude'),
                         longitude=json_converted.get('longitude')
                     ))
-            elif json_converted.get('type') == 'template':
+            elif message_type == 'template':
                 template = json_converted.get('template')
                 template_type = template.get('type')
-                print(f"template:{template} type:{type}")
+                logger.debug(f"template:{template} type:{type}")
                 # case: does't have type is confirm template                
                 if(has_empty_values(template_type)):                    
                     await self.send_to_line(
@@ -216,8 +219,10 @@ class LineConnectorOutput(OutputChannel):
                                 actions=template.get('actions'))
                         )
                     )
-                else: #other is normal template
-                    if(template_type == 'carousel'):# handle carousel template
+                else: 
+                    #other is normal template
+                    if(template_type == 'carousel'):
+                        # handle carousel template
                         await self.send_to_line(
                             TemplateSendMessage(
                                 alt_text=json_converted.get('alt_text'),
@@ -229,17 +234,16 @@ class LineConnectorOutput(OutputChannel):
                             )
                         )
                     else:
+                        # heandle normal template
                         await self.send_to_line(
                             TemplateSendMessage(
                                 alt_text=json_converted.get('alt_text'),
                                 template=json_converted.get('template')
-
                             )
                         )
             else:
-                print("quick_reply:",json_converted.get("quick_reply"))
-                print("emojis:",json_converted.get("emojis"))
-                if(not has_empty_values(json_converted.get("text"))):
+                # default is handle case with text
+                if(not has_empty_values(message_type)):
                     text = json_converted.get("text")
                 await self.send_to_line(
                     TextSendMessage(
@@ -307,23 +311,8 @@ class LineConnectorInput(InputChannel):
                         line = Line(self.access_token, on_new_message)
                         metadata = self.get_metadata(request)
                         await line.handle(event, metadata)
-                        # line_output = LineConnectorOutput(self.access_token, event)
-                        # if isinstance(event, MessageEvent):
-                        #     metadata = self.get_metadata(request)
-                        #     msg = event.message
-                        #     user_id = event.source.user_id
-                        #     if isinstance(msg, TextMessage):
-                        #             # Send to RASA
-                        #             await on_new_message(UserMessage(
-                        #                 text=msg.text,
-                        #                 output_channel=line_output,
-                        #                 input_channel=self.name(),
-                        #                 sender_id=user_id,
-                        #                 metadata=metadata
-                        #             ))
                     return response.json({"status": "Line Webhook success"})
 
-                # FROM CURL / EXTERNAL
                 else:
                     return response.json(request.json)
 
