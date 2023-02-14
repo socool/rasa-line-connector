@@ -1,243 +1,224 @@
-version: "3.1"
-
-intents:
-  - greet
-  - goodbye
-  - affirm
-  - deny
-  - mood_great
-  - mood_unhappy
-  - bot_challenge
-  - line
-
-entities:
-  - message_type
-
-responses:
-  utter_greet:
-  - text: "Hey! How are you?"
-
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
-
-  utter_did_that_help:
-  - text: "Did that help you?"
-
-  utter_happy:
-  - text: "Great, carry on!"
-
-  utter_goodbye:
-  - text: "Bye"
-
-  utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
-
-  utter_slots_line:
-  - text: Reponse {message_type}
-
-  utter_slots_line_flex:
-  - custom: 
-      type: flex
-      alt_text: "This is Flex Message"
-      contens:
-        type: bubble
-        body:
-          type: box
-          layout: vertical
-          contens:
-            - {type: "text", text: "hello"}
-            - {type: "text", text: "world"}
-
-  utter_slots_line_sticker:
-  - custom: 
-      type: sticker
-      package_id: 446
-      sticker_id: 1988
-  
-  utter_slots_line_image:
-  - custom: 
-      type: image
-      original_content_url: "https://example.com/original.jpg"
-      preview_image_url: "https://example.com/preview.jpg"
-  
-  utter_slots_line_video:
-  - custom: 
-      type: video
-      original_content_url: "https://example.com/original.mp4"
-      preview_image_url: "https://example.com/preview.jpg"
-      tracking_id: "track-id"
-  
-  utter_slots_line_audio:
-  - custom: 
-      type: audio
-      original_content_url: "https://example.com/original.m4a"
-      duration: 60000
-
-  utter_slots_line_location:
-  - custom: 
-      type: location
-      title: "my location"
-      address: "1-6-1 Yotsuya, Shinjuku-ku, Tokyo, 160-0004, Japan"
-      latitude: 35.687574
-      longitude: 139.72922
-  
-  utter_slots_line_text_with_quickreply:
-  - custom: 
-      type: text
-      text: Select your favorite food category or send me your location!
-      quick_reply:
-        items:
-        - type: action
-          image_url: https://example.com/sushi.png
-          action:
-            type: message
-            label: Sushi
-            text: Sushi
-        - type: action
-          image_url: https://example.com/tempura.png
-          action:
-            type: message
-            label: Tempura
-            text: Tempura
-        - type: action
-          action:
-            type: location
-            label: Send location
-  utter_slots_line_text_with_emoji:
-  - custom:
-      type: text
-      text: "$ LINE emoji $"
-      emojis:
-        - index: 0
-          productId: "5ac1bfd5040ab15980c9b435"
-          emojiId: "001"
-        - index: 13
-          productId: "5ac1bfd5040ab15980c9b435"
-          emojiId: "002"
-  utter_slots_line_template:
-  - custom:
-      type: template
-      alt_text: This is a buttons template
-      template:
-        type: buttons
-        thumbnail_image_url: https://example.com/bot/images/image.jpg
-        image_aspect_ratio: rectangle
-        image_size: cover
-        image_background_color: "#FFFFFF"
-        title: Menu
-        text: Please select
-        default_action:
-          type: uri
-          label: View detail
-          uri: http://example.com/page/123
-        actions:
-        - type: postback
-          label: Buy
-          data: action=buy&itemid=123
-        - type: postback
-          label: Add to cart
-          data: action=add&itemid=123
-        - type: uri
-          label: View detail
-          uri: http://example.com/page/123
-  utter_slots_line_template_with_button:
-  - custom:
-      type: template
-      alt_text: Buttons template
-      template:
-        type: buttons
-        thumbnail_image_url: https://example.com/bot/images/image.jpg
-        title: Menu
-        text: Please select
-        actions:
-        - type: postback
-          label: postback
-          display_text: post back text
-          data: action=buy&itemid=1
-        - type: message
-          label: message
-          text: message text
-        - type: uri
-          label: uri
-          uri: http://example.com/
-  utter_slots_line_template_with_confirm:
-  - custom:
-      type: template
-      alt_text: Confirm template
-      template:        
-        text: Are you sure?
-        actions:
-        - type: postback
-          label: postback
-          display_text: post back text
-          data: action=buy&itemid=1
-        - type: message
-          label: message
-          text: message text
-  utter_slots_line_template_with_carousel:
-  - custom:
-      type: template
-      alt_text: Carousel template
-      template:
-        type: carousel
-        columns:
-        - thumbnail_image_url: "https://example.com/item1.jpg"
-          title: this is menu1
-          text: description1
-          actions:
-          - type: postback
-            label: postback1
-            display_text: postback text1
-            data: "action=buy&itemid=1"
-          - type: message
-            label: message1
-            text: message text1
-          - type: uri
-            label: uri1
-            uri: "http://example.com/1"
-          default_action:
-            type: uri
-            label: uri1
-            uri: "http://example.com/1"
-        - thumbnail_image_url: "https://example.com/item2.jpg"
-          title: this is menu2
-          text: description2
-          actions:
-          - type: postback
-            label: postback2
-            display_text: postback text2
-            data: "action=buy&itemid=2"
-          - type: message
-            label: message2
-            text: message text2
-          - type: uri
-            label: uri2
-            uri: "http://example.com/2"
-          default_action:
-            type: uri
-            label: uri1
-            uri: "http://example.com/1"
-
-
-  utter_slots_line_text:
-  - text: this is text
-
-  utter_handover_to_human:
-  - text: this is agent
-
+version: '3.0'
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
-
-actions:
-  - action_line_process
-
+intents:
+- greet
+- goodbye
+- affirm
+- deny
+- mood_great
+- mood_unhappy
+- bot_challenge
+- line
+entities:
+- message_type
 slots:
   message_type:
     type: list
+    influence_conversation: true
     mappings:
     - type: from_entity
       entity: message_type
       role: type
       intent: line
+responses:
+  utter_greet:
+  - text: Hey! How are you?
+  utter_cheer_up:
+  - image: https://i.imgur.com/nGF1K8f.jpg
+    text: 'Here is something to cheer you up:'
+  utter_did_that_help:
+  - text: Did that help you?
+  utter_happy:
+  - text: Great, carry on!
+  utter_goodbye:
+  - text: Bye
+  utter_iamabot:
+  - text: I am a bot, powered by Rasa.
+  utter_slots_line:
+  - text: Reponse {message_type}
+  utter_slots_line_flex:
+  - custom:
+      alt_text: This is Flex Message
+      contens:
+        body:
+          contens:
+          - text: hello
+            type: text
+          - text: world
+            type: text
+          layout: vertical
+          type: box
+        type: bubble
+      type: flex
+  utter_slots_line_sticker:
+  - custom:
+      package_id: 446
+      sticker_id: 1988
+      type: sticker
+  utter_slots_line_image:
+  - custom:
+      original_content_url: https://example.com/original.jpg
+      preview_image_url: https://example.com/preview.jpg
+      type: image
+  utter_slots_line_video:
+  - custom:
+      original_content_url: https://example.com/original.mp4
+      preview_image_url: https://example.com/preview.jpg
+      tracking_id: track-id
+      type: video
+  utter_slots_line_audio:
+  - custom:
+      duration: 60000
+      original_content_url: https://example.com/original.m4a
+      type: audio
+  utter_slots_line_location:
+  - custom:
+      address: 1-6-1 Yotsuya, Shinjuku-ku, Tokyo, 160-0004, Japan
+      latitude: 35.687574
+      longitude: 139.72922
+      title: my location
+      type: location
+  utter_slots_line_text_with_quickreply:
+  - custom:
+      quick_reply:
+        items:
+        - action:
+            label: Sushi
+            text: Sushi
+            type: message
+          image_url: https://example.com/sushi.png
+          type: action
+        - action:
+            label: Tempura
+            text: Tempura
+            type: message
+          image_url: https://example.com/tempura.png
+          type: action
+        - action:
+            label: Send location
+            type: location
+          type: action
+      text: Select your favorite food category or send me your location!
+      type: text
+  utter_slots_line_text_with_emoji:
+  - custom:
+      emojis:
+      - emojiId: '001'
+        index: 0
+        productId: 5ac1bfd5040ab15980c9b435
+      - emojiId: '002'
+        index: 13
+        productId: 5ac1bfd5040ab15980c9b435
+      text: $ LINE emoji $
+      type: text
+  utter_slots_line_template:
+  - custom:
+      alt_text: This is a buttons template
+      template:
+        actions:
+        - data: action=buy&itemid=123
+          label: Buy
+          type: postback
+        - data: action=add&itemid=123
+          label: Add to cart
+          type: postback
+        - label: View detail
+          type: uri
+          uri: http://example.com/page/123
+        default_action:
+          label: View detail
+          type: uri
+          uri: http://example.com/page/123
+        image_aspect_ratio: rectangle
+        image_background_color: '#FFFFFF'
+        image_size: cover
+        text: Please select
+        thumbnail_image_url: https://example.com/bot/images/image.jpg
+        title: Menu
+        type: buttons
+      type: template
+  utter_slots_line_template_with_button:
+  - custom:
+      alt_text: Buttons template
+      template:
+        actions:
+        - data: action=buy&itemid=1
+          display_text: post back text
+          label: postback
+          type: postback
+        - label: message
+          text: message text
+          type: message
+        - label: uri
+          type: uri
+          uri: http://example.com/
+        text: Please select
+        thumbnail_image_url: https://example.com/bot/images/image.jpg
+        title: Menu
+        type: buttons
+      type: template
+  utter_slots_line_template_with_confirm:
+  - custom:
+      alt_text: Confirm template
+      template:
+        actions:
+        - data: action=buy&itemid=1
+          display_text: post back text
+          label: postback
+          type: postback
+        - label: message
+          text: message text
+          type: message
+        text: Are you sure?
+      type: template
+  utter_slots_line_template_with_carousel:
+  - custom:
+      alt_text: Carousel template
+      template:
+        columns:
+        - actions:
+          - data: action=buy&itemid=1
+            display_text: postback text1
+            label: postback1
+            type: postback
+          - label: message1
+            text: message text1
+            type: message
+          - label: uri1
+            type: uri
+            uri: http://example.com/1
+          default_action:
+            label: uri1
+            type: uri
+            uri: http://example.com/1
+          text: description1
+          thumbnail_image_url: https://example.com/item1.jpg
+          title: this is menu1
+        - actions:
+          - data: action=buy&itemid=2
+            display_text: postback text2
+            label: postback2
+            type: postback
+          - label: message2
+            text: message text2
+            type: message
+          - label: uri2
+            type: uri
+            uri: http://example.com/2
+          default_action:
+            label: uri1
+            type: uri
+            uri: http://example.com/1
+          text: description2
+          thumbnail_image_url: https://example.com/item2.jpg
+          title: this is menu2
+        type: carousel
+      type: template
+  utter_slots_line_text:
+  - text: this is text
+  utter_handover_to_human:
+  - text: this is agent
+actions:
+- action_line_process
