@@ -1,4 +1,5 @@
-from linebot import LineBotApi, WebhookParser
+from linebot import LineBotApi
+from linebot.v3.webhook import WebhookParser
 from linebot.exceptions import LineBotApiError
 from rasa.core.channels.channel import InputChannel, UserMessage, OutputChannel
 from typing import Dict, Text, Any, List, Optional, Callable, Awaitable,Union
@@ -56,7 +57,7 @@ class Line:
         self.access_token = access_token
     
     def get_user_id(self) -> Text:
-        return self.last_message.source.sender_id
+        return self.last_message.source.user_id
 
     async def handle(self, event: MessageEvent, metadata: Optional[Dict[Text, Any]]) -> None:
         self.last_message = event
