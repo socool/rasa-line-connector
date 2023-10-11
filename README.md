@@ -1,6 +1,7 @@
 ### RASA Line Connector
 
 Commmit pattern
+
 - feat (✨): new feature
 - fix (🐛): fix some bug
 - refactor (📦): code refactor
@@ -14,7 +15,14 @@ Commmit pattern
 folk from
 https://github.com/jakkritz/line_rasa_connector
 
+### Requirement
+
+- Python 3.8.17
+- rasa 3.6.12
+- line-bot-sdk 3.5.0
+
 <a name="line-app-setup"></a>
+
 ### Line app setup
 
 - [Create an app](https://developers.line.biz/en/services/messaging-api/)
@@ -24,7 +32,9 @@ https://github.com/jakkritz/line_rasa_connector
 - Setting webhook url in (https://developers.line.biz/en/docs/messaging-api/building-bot/#set-up-bot-on-line-developers-console)
 
 ### Create your credential file contain
+
 credentials.yml
+
 ```
 rasa:
   url: "http://localhost:5002/api"
@@ -34,29 +44,47 @@ addons.line_connector.LineConnectorInput:
   access_token: "[ACCESS_TOKEN]"
 ```
 
+### Run ngrok
+
+- Run ngrok map to
+
+```
+ngrok http 5005
+```
+
+- setup you webhook in line developers console Webhook URL: https://[YOUR_LINK].ngrok.io/webhooks/line/callback
+- check by click verify
+
 ### Train your models
+
 ```
 rasa train
 ```
 
 ### Run RASA server
+
 commands for run server to test callback
+
 ```
 rasa run -m models --credentials credentials.yml --enable-api
 ```
 
 ### Run Action server
+
 for test line component
+
 ```
 rasa run actions
 ```
 
 run with debug mode
+
 ```
 rasa run -m models --credentials credentials.yml --enable-api --cors "*" --debug
 ```
 
 using this curl for test line webhook payload
+
 ```
 curl --request POST \
      --url http://localhost:5005/webhooks/line/callback \
@@ -69,6 +97,7 @@ curl --request POST \
 ```
 
 check bot info using this command
+
 ```
 curl --request GET \
      --url http://localhost:5005/webhooks/line/bot/info

@@ -1,18 +1,17 @@
-from linebot import LineBotApi
-from linebot.v3.webhook import WebhookParser
-from linebot.exceptions import LineBotApiError
 from rasa.core.channels.channel import InputChannel, UserMessage, OutputChannel
-from typing import Dict, Text, Any, List, Optional, Callable, Awaitable,Union
+from typing import Dict, Text, Any, List, Optional, Callable, Awaitable, Union
 from sanic import Blueprint, response
 from sanic.response import HTTPResponse
 from sanic.request import Request
+from linebot.v3 import WebhookParser
+from linebot import LineBotApi
 import json
 import logging
 
 
 from linebot.models import (
-    MessageEvent, 
-    TextSendMessage, 
+    MessageEvent,
+    TextSendMessage,
     FlexSendMessage,
     StickerSendMessage,
     ImageSendMessage,
@@ -26,6 +25,7 @@ from linebot.models import (
 
 logger = logging.getLogger(__name__)
 
+
 def has_empty_values(data):
     if isinstance(data, dict):
         for value in data.values():
@@ -38,6 +38,8 @@ def has_empty_values(data):
     elif not data:
         return True
     return False
+
+
 class Line:
     """Implement a line to parse incoming webhooks and send msgs."""
 
@@ -55,7 +57,7 @@ class Line:
         self.client = LineBotApi(access_token)
         self.last_message: Dict[Text, Any] = {}
         self.access_token = access_token
-    
+
     def get_user_id(self) -> Text:
         return self.last_message.source.user_id
 
@@ -75,28 +77,28 @@ class Line:
         """Handle an incoming event from the line webhook."""
 
         if self._is_user_message(event):
-            if hasattr(event, 'message'): 
-                #extract text from user message
+            if hasattr(event, 'message'):
+                # extract text from user message
                 text = event.message.text
             else:
-                #extract data from user postback
+                # extract data from user postback
                 text = event.postback.data
         else:
             logger.warning(
                 "Received a message from line that we can not "
                 f"handle. Event: {event}"
             )
-            return  
+            return
 
-        await self._handle_user_message(event,text, self.get_user_id(), metadata)
-    
+        await self._handle_user_message(event, text, self.get_user_id(), metadata)
+
     async def _handle_user_message(
         self, event: MessageEvent, text: Text, sender_id: Text, metadata: Optional[Dict[Text, Any]]
     ) -> None:
         """Pass on the text to the dialogue engine for processing."""
 
-        out_channel = LineConnectorOutput(self.access_token,event)
-        
+        out_channel = LineConnectorOutput(self.access_token, event)
+
         user_msg = UserMessage(
             text, out_channel, sender_id, input_channel=self.name(), metadata=metadata
         )
@@ -107,7 +109,7 @@ class Line:
                 "Exception when trying to handle webhook for line message."
             )
             pass
-       
+
 
 class LineConnectorOutput(OutputChannel):
     """Output channel for Line."""
@@ -124,17 +126,17 @@ class LineConnectorOutput(OutputChannel):
         self.reply_token = event.reply_token
         self.sender_id = event.source.user_id
         super().__init__()
-    
+
     async def send_to_line(
             self,
             payload_object: Union[TextSendMessage,
-                             FlexSendMessage,
-                             StickerSendMessage,
-                             ImageSendMessage,
-                             VideoSendMessage,
-                             AudioSendMessage,
-                             LocationSendMessage,
-                             TemplateSendMessage],
+                                  FlexSendMessage,
+                                  StickerSendMessage,
+                                  ImageSendMessage,
+                                  VideoSendMessage,
+                                  AudioSendMessage,
+                                  LocationSendMessage,
+                                  TemplateSendMessage],
             **kwargs: Any) -> None:
         try:
             if self.reply_token:
@@ -157,10 +159,10 @@ class LineConnectorOutput(OutputChannel):
             self, recipient_id: Text, text: Text, **kwargs: Any
     ) -> None:
         try:
-            json_converted = json.loads(text)            
+            json_converted = json.loads(text)
             logger.debug(f"json_converted:{json_converted}")
             message_type = json_converted.get('type')
-            
+
             if message_type == 'flex':
                 # send flex
                 await self.send_to_line(
@@ -179,22 +181,27 @@ class LineConnectorOutput(OutputChannel):
                 # send image
                 await self.send_to_line(
                     ImageSendMessage(
-                        original_content_url=json_converted.get('original_content_url'),
-                        preview_image_url=json_converted.get('preview_image_url')
+                        original_content_url=json_converted.get(
+                            'original_content_url'),
+                        preview_image_url=json_converted.get(
+                            'preview_image_url')
                     ))
             elif message_type == 'video':
                 # send video
                 await self.send_to_line(
                     VideoSendMessage(
-                        original_content_url=json_converted.get('original_content_url'),
-                        preview_image_url=json_converted.get('preview_image_url'),
+                        original_content_url=json_converted.get(
+                            'original_content_url'),
+                        preview_image_url=json_converted.get(
+                            'preview_image_url'),
                         tracking_id=json_converted.get('tracking_id')
                     ))
             elif message_type == 'audio':
                 # send audio
                 await self.send_to_line(
                     AudioSendMessage(
-                        original_content_url=json_converted.get('original_content_url'),
+                        original_content_url=json_converted.get(
+                            'original_content_url'),
                         duration=json_converted.get('duration')
                     ))
             elif message_type == 'location':
@@ -210,8 +217,8 @@ class LineConnectorOutput(OutputChannel):
                 template = json_converted.get('template')
                 template_type = template.get('type')
                 logger.debug(f"template:{template} type:{type}")
-                # case: does't have type is confirm template                
-                if(has_empty_values(template_type)):                    
+                # case: does't have type is confirm template
+                if (has_empty_values(template_type)):
                     await self.send_to_line(
                         TemplateSendMessage(
                             alt_text=json_converted.get('alt_text'),
@@ -220,16 +227,17 @@ class LineConnectorOutput(OutputChannel):
                                 actions=template.get('actions'))
                         )
                     )
-                else: 
-                    #other is normal template
-                    if(template_type == 'carousel'):
+                else:
+                    # other is normal template
+                    if (template_type == 'carousel'):
                         # handle carousel template
                         await self.send_to_line(
                             TemplateSendMessage(
                                 alt_text=json_converted.get('alt_text'),
                                 template=CarouselTemplate(
                                     columns=template.get('columns'),
-                                    image_aspect_ratio=template.get('image_aspect_ratio'),
+                                    image_aspect_ratio=template.get(
+                                        'image_aspect_ratio'),
                                     image_size=template.get('image_size')
                                 )
                             )
@@ -244,18 +252,19 @@ class LineConnectorOutput(OutputChannel):
                         )
             else:
                 # default is handle case with text
-                if(not has_empty_values(message_type)):
+                if (not has_empty_values(message_type)):
                     text = json_converted.get("text")
                 await self.send_to_line(
                     TextSendMessage(
                         text=text,
                         quick_reply=json_converted.get("quick_reply"),
                         emojis=json_converted.get("emojis")
-                        )
                     )
+                )
         except ValueError:
             message_object = TextSendMessage(text=text)
             await self.send_to_line(message_object)
+
 
 class LineConnectorInput(InputChannel):
     """Line input channel"""
@@ -293,11 +302,11 @@ class LineConnectorInput(InputChannel):
         @line_webhook.route("/", methods=["GET"])
         async def health(_: Request) -> HTTPResponse:
             return response.json({"status": "ok"})
-        
+
         @line_webhook.route("/bot/info", methods=["GET"])
         async def info(_: Request) -> HTTPResponse:
             bot_info = LineBotApi(self.access_token).get_bot_info()
-            return response.json(json.dumps(bot_info,cls=BotInfoEncoder))
+            return response.json(json.dumps(bot_info, cls=BotInfoEncoder))
 
         @line_webhook.route("/callback", methods=["POST"])
         async def message(request: Request) -> Any:
@@ -317,13 +326,13 @@ class LineConnectorInput(InputChannel):
                 else:
                     return response.json(request.json)
 
-
         return line_webhook
 
     def get_line_message_parser(self) -> WebhookParser:
         """Loads Line WebhookParser"""
         parser = WebhookParser(self.app_secret)
         return parser
+
 
 class BotInfoEncoder(json.JSONEncoder):
     def default(self, obj):
