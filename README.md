@@ -102,3 +102,25 @@ check bot info using this command
 curl --request GET \
      --url http://localhost:5005/webhooks/line/bot/info
 ```
+
+### Example
+- Text
+type this message in line that's you setup
+```
+line text
+```
+- Sticker
+```
+line sticker
+```
+- Flex
+```
+line flex
+```
+
+** don't forgot to run action server with this command
+```
+rasa run actions
+```
+
+[screenshot](https://github.com/socool/rasa-line-connector/blob/master/screenshot/screenshot-2.png)
